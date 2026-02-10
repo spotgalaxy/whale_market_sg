@@ -1,6 +1,7 @@
 #define _CRT_SECURE_NO_WARNINGS
 
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
 #include <Windows.h>
 #include <stdbool.h>
@@ -36,7 +37,7 @@ typedef struct {
 	char passwords[20];
 	char tel[12];
 	char add[25];
-	float balance;
+	double balance;
 } Users;
 
 
@@ -54,6 +55,10 @@ void checkAllOrder();
 void checkAllUser();
 void delUser();
 void delistGoods();
+void privateMenu();
+void buyer();
+void seller();
+void privateInfocontrol();
 
 
 int main() {
@@ -97,7 +102,7 @@ int main() {
 void logIn() {
 
 	char name[50] = { 0 };
-	char buffer[50] = { 0 };
+	char buffer[150] = { 0 };
 	char password[11] = { 0 };
 
 	Users user = { 0 };
@@ -121,7 +126,7 @@ void logIn() {
 
 		buffer[strcspn(buffer, "\n")] = '\0';
 
-		sscanf(buffer, "%6[^,],%9[^,],%19[^,],%11[^,],%24[^,],%f",
+		sscanf(buffer, "%6[^,],%9[^,],%19[^,],%11[^,],%24[^,],%lf",
 			user.Uid,
 			user.name,
 			user.passwords,
@@ -144,7 +149,11 @@ void logIn() {
 		cnt--;
 		if (strcmp(password, user.passwords) == 0) {
 			printf("登录成功，欢迎使用 whale market.\n\n");
+
+			Sleep(2000);
+			system("cls");
 			
+			privateMenu();
 		}
 		else {
 			if (cnt) {
@@ -168,7 +177,7 @@ void logIn() {
 
 void registerIn() {
 
-	char buffer[50] = { 0 };
+	char buffer[150] = { 0 };
 	
 	Users newUser = { 0 };
 	Users user = { 0 };
@@ -188,22 +197,13 @@ void registerIn() {
 	printf("输入您的名字: ");
 	scanf("%s", newUser.name);
 
+	fgets(buffer, sizeof(buffer), fp);
 
-	while (fgets(buffer, sizeof(buffer), fp)) {
-
-
-		if (!strcmp(buffer, newUser.name)) {
-
-			isRepeated = 1;
-			break;
-		}
-	}
-	
 	while (fgets(buffer, sizeof(buffer), fp)) {
 
 		buffer[strcspn(buffer, "\n")] = '\0';
 
-		sscanf(buffer, "%6[^,],%9[^,],%19[^,],%11[^,],%24[^,],%f",
+		sscanf(buffer, "%6[^,],%9[^,],%19[^,],%11[^,],%24[^,],%lf",
 			user.Uid,
 			user.name,
 			user.passwords,
@@ -211,6 +211,13 @@ void registerIn() {
 			user.add,
 			&user.balance
 		);
+
+		char utid[7] = { 0 };
+		memcpy(utid, user.Uid + 1, 5);
+
+		char* end;
+
+		id = (int)strtol(utid, &end, NULL);
 	}
 	if (isRepeated) {
 
@@ -223,25 +230,23 @@ void registerIn() {
 
 		printf("请输入您的密码: ");
 		scanf("%s", newUser.passwords);
-		puts("");
+		
 		
 		printf("请输入您的联系电话: ");
 		scanf("%s", newUser.tel);
-		puts("");
+		
 
 		printf("请输入您的家庭住址: ");
 		scanf("%s", newUser.add);
 
-			char* end;
+			
+	}
 
-			id = (int)strtol(user.Uid, &end, 10);
-		}
+		sprintf(newUser.Uid, "U%05d", id+1);
 
-		sprintf(newUser.name, "U%05d", id+1);
+		newUser.balance = 0.0;
 
-		newUser.balance = 0.0f;
-
-		fprintf(fp, "%s,%s,%s,%s,%s,%.1f\n",
+		fprintf(fp, "%s,%s,%s,%s,%s,%.1lf\n",
 			newUser.Uid,
 			newUser.name,
 			newUser.passwords,
@@ -257,7 +262,7 @@ void registerIn() {
 
 void adminLogIn() {
 
-	char buffer[50] = { 0 };
+	char buffer[150] = { 0 };
 	char password[11] = { 0 };
 
 	printf("输入管理员姓名: ");
@@ -277,13 +282,22 @@ void adminLogIn() {
 
 			manage();
 		}
+		else {
+
+			puts("\n");
+			puts("******登录失败，即将返回主菜单******");
+
+			Sleep(2000);
+			system("cls");
+		}
 	}
 	else {
 
 		puts("\n\n");
 		puts("******登录失败，即将返回主菜单******");
 
-		Sleep(5000);
+		Sleep(2000);
+		system("cls");
 	}
 
 }
@@ -558,7 +572,7 @@ void checkAllUser() {
 
 		users[strcspn(users, "\n")] = '\0';
 
-		int ret = sscanf(users, "%6[^,],%9[^,],%19[^,],%11[^,],%24[^,],%f",
+		int ret = sscanf(users, "%6[^,],%9[^,],%19[^,],%11[^,],%24[^,],%lf",
 			user.Uid,
 			user.name,
 			user.passwords,
@@ -596,3 +610,52 @@ void delistGoods() {
 }
 
 
+void privateMenu() {
+	puts("==============================================");
+	puts("1.注销登录 2.我是买家 3.我是卖家 4.个人信息管理");
+	puts("==============================================\n\n");
+
+	int choice;
+
+	while (1) {
+		printf("选择您的操作 : ");
+
+		scanf("%d", &choice);
+
+		switch (choice) {
+		case 1:
+			puts("正在返回主菜单，请稍后...");
+			break;
+		case 2:
+			buyer();
+			break;
+		case 3:
+			seller();
+			break;
+		case 4:
+			privateInfocontrol();
+			break;
+		default:
+			puts("无效的选择，请重新输入。\n\n");
+		}
+
+		if (choice == 1) {
+			Sleep(2000);
+			system("cls");
+
+			break;
+		}
+	}
+}
+
+void buyer() {
+
+}
+
+void seller() {
+
+}
+
+void privateInfocontrol() {
+
+}
