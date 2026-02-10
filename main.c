@@ -3,6 +3,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <Windows.h>
+#include <stdbool.h>
 
 typedef struct {
 	int year;
@@ -59,6 +60,7 @@ int main() {
 
 	int choice;
 
+	//主菜单
 	while (1) {
 
 		puts("=========================================");
@@ -95,12 +97,73 @@ int main() {
 void logIn() {
 
 	char name[50] = { 0 };
+	char buffer[50] = { 0 };
+	char password[11] = { 0 };
 
+	Users user = { 0 };
+
+	bool isFound = false;
+
+	SCM:
 	printf("请输入您的用户名称 : ");
 
 	scanf("%s", name);
 
+	FILE* fp = fopen("userList.txt", "r");
+
+	if (!fp) {
+
+		perror("open failed");
+		return;
+	}
 	
+	while (fgets(buffer, sizeof(buffer), fp)) {
+
+		buffer[strcspn(buffer, "\n")] = '\0';
+
+		sscanf(buffer, "%6[^,],%9[^,],%19[^,],%11[^,],%24[^,],%f",
+			user.Uid,
+			user.name,
+			user.passwords,
+			user.tel,
+			user.add,
+			&user.balance
+		);
+
+		if (strcmp(name, user.name) == 0) {
+			isFound = true;
+			break;
+		}
+	}
+
+	if (isFound) {
+		int cnt = 4;
+		SC:
+		printf("请输入密码: ");
+		scanf("%s", password);
+		cnt--;
+		if (strcmp(password, user.passwords) == 0) {
+			printf("登录成功，欢迎使用 whale market.\n\n");
+			
+		}
+		else {
+			if (cnt) {
+				printf("密码错误，你还有 %d 次机会。\n\n", cnt);
+				goto SC;
+			}
+			else {
+				puts("次数用尽，即将返回主菜单。\n");
+
+				Sleep(2000);
+				system("cls");
+			}
+
+		}
+	}
+	else {
+		printf("未识别的name，请检查后重新输入.\n\n");
+		goto SCM;
+	}
 }
 
 void registerIn() {
