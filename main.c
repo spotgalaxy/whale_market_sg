@@ -179,11 +179,12 @@ void registerIn() {
 
 	char buffer[150] = { 0 };
 	
+	
 	Users newUser = { 0 };
 	Users user = { 0 };
 
 	int id = 0;
-
+	bool isFound = false;
 	int isRepeated = 0;
 
 	FILE* fp = fopen("userList.txt", "a+");
@@ -194,6 +195,7 @@ void registerIn() {
 		return;
 	}
 
+	SCN:
 	printf("输入您的名字: ");
 	scanf("%s", newUser.name);
 
@@ -211,6 +213,12 @@ void registerIn() {
 			user.add,
 			&user.balance
 		);
+		
+
+		if (strcmp(newUser.name, user.name) == 0) {
+			isFound = true;
+			break;
+		}
 
 		char utid[7] = { 0 };
 		memcpy(utid, user.Uid + 1, 5);
@@ -219,12 +227,11 @@ void registerIn() {
 
 		id = (int)strtol(utid, &end, NULL);
 	}
-	if (isRepeated) {
+	if (isFound) {
 
-		puts("重复的名字，请重新输入.");
+		puts("重复的名字，请重新输入.\n");
 
-		printf("输入您的名字: ");
-		scanf("%s", newUser.name);
+		goto SCN;
 	}
 	else {
 
