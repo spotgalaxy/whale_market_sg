@@ -89,7 +89,7 @@ int main() {
 			break;
 		case 4:
 			puts("\n\n感谢您的使用，下次再见，拜拜！");
-			Sleep(1500);
+			Sleep(2000);
 			exit(0);
 		}
 	}
@@ -148,7 +148,7 @@ void logIn() {
 		scanf("%s", password);
 		cnt--;
 		if (strcmp(password, user.passwords) == 0) {
-			printf("***** 登录成功，欢迎使用 whale market. *****\n\n");
+			printf("\n\n***** 登录成功，欢迎使用 whale market. *****");
 
 			Sleep(2000);
 			system("cls");
@@ -632,11 +632,15 @@ void privateMenu() {
 		switch (choice) {
 		case 1:
 			puts("正在返回主菜单，请稍后...");
-			break;
+			Sleep(2000);
+			system("cls");
+			return;
 		case 2:
+			system("cls");
 			buyer();
 			break;
 		case 3:
+			system("cls");
 			seller();
 			break;
 		case 4:
@@ -646,12 +650,6 @@ void privateMenu() {
 			puts("无效的选择，请重新输入。\n\n");
 		}
 
-		if (choice == 1) {
-			Sleep(2000);
-			system("cls");
-
-			break;
-		}
 	}
 }
 
@@ -660,9 +658,9 @@ void buyer() {
 }
 
 void seller() {
-	puts("==============================================");
+	puts("====================================================================================");
 	puts("1.发布商品 2.查看发布商品 3.修改商品信息 4.下架商品 5.查看历史订单 6.返回用户主界面");
-	puts("==============================================\n\n");
+	puts("====================================================================================\n\n");
 
 
 }
