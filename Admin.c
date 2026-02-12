@@ -73,7 +73,7 @@ void checkAllGoods() {
 		goods[strcspn(goods, "\n")] = '\0';
 
 		int ret = sscanf(goods,
-			"%6[^,],%9[^,],%lf,%29[^,],%6[^,],%d-%d-%d,%6[^\n]",
+			"%6[^,],%15[^,],%lf,%50[^,],%6[^,],%d-%d-%d,%6[^\n]",
 			good.id,
 			good.name,
 			&good.price,
@@ -87,7 +87,7 @@ void checkAllGoods() {
 
 		if (ret == 9) {
 			// ³É¹¦½âÎö
-			printf("%s\t %s\t %.1f\t %s\t %04d-%02d-%02d\t %s\n",
+			printf("%s\t %10s\t %10.2lf\t %10s\t %04d-%02d-%02d\t %10s\n",
 				good.id,
 				good.name,
 				good.price,
@@ -227,7 +227,7 @@ void checkAllOrder() {
 		);
 
 		if (ret == 8) {
-			printf("%-6s %-6s %.1f %04d-%02d-%02d %-6s %-6s\n",
+			printf("%s %10s %10.2lf %04d-%02d-%02d %10s %10s\n",
 				order.orderId,
 				order.goodsId,
 				order.sum,
@@ -284,7 +284,7 @@ void checkAllUser() {
 		);
 
 		if (ret == 6) {
-			printf("%-6s %-9s %-11s %-24s %.1f\n",
+			printf("%s %15s %15s %20s %10.2lf\n",
 				user.Uid,
 				user.name,
 				user.tel,
