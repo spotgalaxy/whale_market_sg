@@ -26,7 +26,7 @@ void seller(char* UserId) {
 			checkPublishedGoods(UserId);
 			break;
 		case 3:
-			changeGoodsInfo();
+			changeGoodsInfo(UserId);
 			break;
 		case 4:
 			delistOwnGoods();
@@ -170,7 +170,7 @@ void checkPublishedGoods(char* UserId) {
 
 	puts("您发布的商品清单如下: ");
 	puts("\n\n********************************************************************************");
-	printf(" %s\t %10s\t %8s\t %10s\t %10s\n", "ID", "名称", "价格", "上架时间", "商品状态");
+	printf("%s\t %10s\t %8s\t %10s\t %10s\n", "ID", "名称", "价格", "上架时间", "商品状态");
 
 	fgets(buffer, sizeof(buffer), fp);
 
@@ -208,6 +208,118 @@ void checkPublishedGoods(char* UserId) {
 
 }
 
-void changeGoodsInfo() {}
+void changeGoodsInfo(char* UserId) { // 应该先删在插入，未完全实现
+	char buffer[256] = { 0 };
+	Goods good = { 0 };
+
+	bool isFound = false;
+
+	FILE* fp = fopen("goodsList.txt", "a+");
+	if (!fp) {
+
+		perror("open failed");
+		return;
+	}
+
+	printf("请输入您要修改商品的ID: ");
+	char cid[7] = { 0 };
+	scanf(" %s", cid);
+
+	fgets(buffer, sizeof(buffer), fp);
+
+	while (fgets(buffer, sizeof(buffer), fp)) {
+		buffer[strcspn(buffer, "\n")] = '\0';
+
+		sscanf(buffer, "%6[^,],%30[^,],%lf,%50[^,],%6[^,],%d-%d-%d,%6[^\n]",
+			good.id,
+			good.name,
+			&good.price,
+			good.description,
+			good.sellerId,
+			&good.data.year,
+			&good.data.month,
+			&good.data.day,
+			good.statu
+		);
+
+		if (strcmp(good.id, cid) == 0 && strcmp(good.sellerId, UserId) == 0) {
+			isFound = true;
+			break;
+		}
+	}
+
+	if (isFound) {
+		CG:
+		puts("\n***********************************************************");
+		printf("请输入修改商品属性(1.商品名称 2.商品价格 3.商品描述): ");
+		int choice;
+		scanf("%d", &choice);
+
+		char changed[10] = { 0 };
+		double cge = 0.0;
+
+		switch (choice) {
+		case 1:
+			printf("请输入修改后的名称: ");
+			scanf(" %s", changed);
+			memcpy(good.name, changed, sizeof(changed));
+			break;
+		case 2:
+			printf("请输入修改后的价格: ");
+			scanf("%lf", &cge);
+			good.price = cge;
+			break;
+		case 3:
+			printf("请输入修改后的描述: ");
+			scanf(" %s", changed);
+			memcpy(good.description, changed, sizeof(changed));
+			break;
+		default:
+			puts("没有对应的商品属性，修改失败.");
+			puts("***********************************************************\n\n");
+			goto CG;
+		}
+
+		puts("\n\n请确认修改后的商品信息.");
+		puts("\n*****************************************************");
+		printf("商品ID: %s\n", good.id);
+		printf("商品名称: %s\n", good.name);
+		printf("商品价格: %.2lf\n", good.price);
+		printf("商品描述: %s\n", good.description);
+		puts("*****************************************************\n");
+
+		printf("确认修改(y/n): ");
+		char coe;
+		scanf(" %c", &coe);
+
+		if ('y' == coe) {
+			puts("修改中，请稍后...");
+
+			fprintf(fp, "%s,%s,%.2lf,%s,%s,%04d-%02d-%02d,%s\n",
+				good.id,
+				good.name,
+				good.price,
+				good.description,
+				good.sellerId,
+				good.data.year,
+				good.data.month,
+				good.data.day,
+				good.statu
+			);
+
+			Sleep(1500);
+
+			puts("修改成功!");
+			puts("***********************************************************\n\n");
+		}
+		else {
+			puts("用户取消修改.");
+			goto CG;
+		}
+	}
+
+	fclose(fp);
+}
+
 void delistOwnGoods() {}
 void checkHistoryOrder() {}

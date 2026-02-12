@@ -66,7 +66,7 @@ void checkAllGoods() {
 	puts("***********************************************************************************");
 
 	fgets(goods, sizeof(goods), fp);
-	printf("%s\t %10s\t %8s\t %10s\t %10s\t %10s\n", "ID", "名称", "价格", "卖家ID", "上架时间", "商品状态");
+	printf("%s\t %10s\t %10s\t %10s\t %10s\t %10s\n", "ID", "名称", "价格", "卖家ID", "上架时间", "商品状态");
 
 	while (fgets(goods, sizeof(goods), fp)) {
 		// 移除 fgets 可能读入的换行符（可选，但推荐）
@@ -157,7 +157,7 @@ void searchGoods() {
 	if (is_found) {
 
 		puts("\n\n***********************************************************************************");
-		printf("%s\t %10s\t %8s\t %10s\t %10s\t %10s\n", "ID", "名称", "价格", "卖家ID", "上架时间", "商品状态");
+		printf("%s\t %10s\t %10s\t %10s\t %10s\t %10s\n", "ID", "名称", "价格", "卖家ID", "上架时间", "商品状态");
 		printf("%s\t %10s\t %8.2lf\t %10s\t %04d-%02d-%02d\t %10s\n",
 			good.id,
 			good.name,
@@ -208,7 +208,7 @@ void checkAllOrder() {
 	puts("***********************************************************************************");
 
 	fgets(orders, sizeof(orders), fp);
-	printf("%s\t %10s\t %8s\t %10s\t %10s\t %10s\n", "ID", "商品ID", "交易金额", "交易时间",  "买家ID", "卖家ID");
+	printf("%s\t %10s\t %10s\t %10s\t %10s\t %10s\n", "ID", "商品ID", "交易金额", "交易时间",  "买家ID", "卖家ID");
 
 
 	while (fgets(orders, sizeof(orders), fp)) {
@@ -268,14 +268,14 @@ void checkAllUser() {
 
 
 	fgets(users, sizeof(users), fp);
-	fputs(users, stdout);
+	printf("%s\t %10s\t %10s\t %10s\t %10s\n", "ID", "用户名", "联系方式", "地址", "余额");
 
 
 	while (fgets(users, sizeof(users), fp)) {
 
 		users[strcspn(users, "\n")] = '\0';
 
-		int ret = sscanf(users, "%6[^,],%9[^,],%19[^,],%11[^,],%24[^,],%lf",
+		int ret = sscanf(users, "%6[^,],%9[^,],%19[^,],%11[^,],%50[^,],%lf",
 			user.Uid,
 			user.name,
 			user.passwords,
@@ -285,7 +285,7 @@ void checkAllUser() {
 		);
 
 		if (ret == 6) {
-			printf("%s %15s %15s %20s %10.2lf\n",
+			printf("%s\t %10s\t %10s\t %10s\t %5.2lf\n",
 				user.Uid,
 				user.name,
 				user.tel,
