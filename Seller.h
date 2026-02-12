@@ -6,7 +6,7 @@
 
 void seller(char* UserId);
 void publishGoods(char* UserId);
-void checkPublishedGoods();
+void checkPublishedGoods(char* UserId);
 void changeGoodsInfo();
 void delistOwnGoods();
 void checkHistoryOrder();

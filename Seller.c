@@ -23,7 +23,7 @@ void seller(char* UserId) {
 			system("cls");
 			break;
 		case 2:
-			checkPublishedGoods();
+			checkPublishedGoods(UserId);
 			break;
 		case 3:
 			changeGoodsInfo();
@@ -155,7 +155,59 @@ void publishGoods(char* UserId) {
 
 }
 
-void checkPublishedGoods() {}
+void checkPublishedGoods(char* UserId) {
+	char buffer[256] = { 0 };
+
+	Goods good = { 0 };
+
+	FILE* fp = fopen("goodsList.txt", "r");
+
+	if (!fp) {
+
+		perror("open failed");
+		return;
+	}
+
+	puts("您发布的商品清单如下: ");
+	puts("\n\n********************************************************************************");
+	printf(" %s\t %10s\t %8s\t %10s\t %10s\n", "ID", "名称", "价格", "上架时间", "商品状态");
+
+	fgets(buffer, sizeof(buffer), fp);
+
+	while (fgets(buffer, sizeof(buffer), fp)) {
+		buffer[strcspn(buffer, "\n")] = '\0';
+
+		sscanf(buffer,"%6[^,],%30[^,],%lf,%50[^,],%6[^,],%d-%d-%d,%6[^\n]",
+			good.id,
+			good.name,
+			&good.price,
+			good.description,
+			good.sellerId,
+			&good.data.year,
+			&good.data.month,
+			&good.data.day,
+			good.statu
+		);
+
+		if (strcmp(good.sellerId, UserId) == 0) {
+			printf("%s\t %10s\t %8.2lf\t %04d-%02d-%02d\t %10s\n",
+				good.id,
+				good.name,
+				good.price,
+				good.data.year,
+				good.data.month,
+				good.data.day,
+				good.statu
+			);
+		}
+	}
+
+	fclose(fp);
+
+	puts("********************************************************************************\n");
+
+}
+
 void changeGoodsInfo() {}
 void delistOwnGoods() {}
 void checkHistoryOrder() {}
