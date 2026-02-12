@@ -23,8 +23,11 @@ void registerIn() {
 	}
 
 SCN:
+	isFound = false;
 	printf("输入您的名字: ");
 	scanf("%s", newUser.name);
+
+	rewind(fp);
 
 	fgets(buffer, sizeof(buffer), fp);
 
@@ -89,7 +92,7 @@ SCN:
 		newUser.balance
 	);
 
-	printf("注册成功！您的用户ID是: %s\n", newUser.Uid);
+	printf("注册成功！您的用户ID是: %s\n\n\n", newUser.Uid);
 
 	fclose(fp);
 }
